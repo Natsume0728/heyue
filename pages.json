@@ -1,98 +1,208 @@
 {
-	"easycom": {
-		"autoscan": true,
-		"custom": {
-			// uni-ui 规则如下配置  
-			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
-		}
-	},
-	"pages": [{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
-			"path": "pages/detail/detail",
-			"style": {
-				"navigationBarTitleText": "详情"
-			}
-		},
-		{
-			"path": "pages/mine/mine",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
-			"path": "pages/publish/publish",
-			"style": {
-				"navigationBarTitleText": "车源发布"
-			}
-		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "登录"
-			}
-		},
-		{
-			"path": "pages/words/word",
-			"style": {
-				"navigationBarTitleText": "用户协议"
-			}
-		},
-		{
-			"path": "pages/words/word2",
-			"style": {
-				"navigationBarTitleText": "隐私政策"
-			}
-		},
-		{
-			"path": "pages/about/about",
-			"style": {
-				"navigationBarTitleText": "关于我们"
-			}
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      // uni-ui 规则如下配置  
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "^u-(.*)": "@/uni_modules/uview-pro/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [{
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/index/shaixuan",
+      "style": {
+        "navigationBarTitleText": "筛选"
+      }
+    },
+    {
+      "path": "pages/index/paixu",
+      "style": {
+        "navigationBarTitleText": "排序"
+      }
+    },
+    {
+      "path": "pages/index/pingpai",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/index/chengshi",
+      "style": {
+        "navigationBarTitleText": "城市"
+      }
+    },
+    {
+      "path": "pages/index/quyu",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+    {
+      "path": "pages/detail/detail",
+      "style": {
+        "navigationBarTitleText": "详情"
+      }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/publish/publish",
+      "style": {
+        "navigationBarTitleText": "车源发布"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/words/word",
+      "style": {
+        "navigationBarTitleText": "用户协议"
+      }
+    },
+    {
+      "path": "pages/words/word2",
+      "style": {
+        "navigationBarTitleText": "隐私政策"
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "style": {
+        "navigationBarTitleText": "关于我们"
+      }
     },
     {
       "path": "pages/coll/coll",
       "style": {
         "navigationBarTitleText": "我的收藏"
       }
+    },
+    {
+      "path": "pages/account/account",
+      "style": {
+        "navigationBarTitleText": "个人信息"
+      }
+    },
+    {
+      "path": "pages/shaixuan/shaixuan",
+      "style": {
+        "navigationBarTitleText": "筛选"
+      }
+    },
+    {
+      "path": "pages/shaixuan/chexing",
+      "style": {
+        "navigationBarTitleText": "车型"
+      }
+    },
+    {
+      "path": "pages/shaixuan/biansuxiang",
+      "style": {
+        "navigationBarTitleText": "变速箱"
+      }
+    },
+    {
+      "path": "pages/shaixuan/paifang",
+      "style": {
+        "navigationBarTitleText": "排放"
+      }
+    },
+    {
+      "path": "pages/shaixuan/yanse",
+      "style": {
+        "navigationBarTitleText": "颜色"
+      }
+    },
+    {
+      "path": "pages/shaixuan/ranyou",
+      "style": {
+        "navigationBarTitleText": "燃油类型"
+      }
+    },
+    {
+      "path": "pages/shaixuan/guohu",
+      "style": {
+        "navigationBarTitleText": "过户次数"
+      }
+    },
+    {
+      "path": "pages/shaixuan/nianfen",
+      "style": {
+        "navigationBarTitleText": "车辆年份"
+      }
+    },
+    {
+      "path": "pages/shaixuan/pingpai",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/shaixuan/pingpai2",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/shaixuan/quyu",
+      "style": {
+        "navigationBarTitleText": "省市"
+      }
+    },
+    {
+      "path": "pages/shaixuan/quyu2",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
     }
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"app-plus": {
-			"background": "#efeff4"
-		}
-	},
-	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#10458d",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"iconPath": "/static/home.png",
-				"selectedIconPath": "/static/home-selected.png",
-				"text": "首页"
-			}, {
-				"pagePath": "pages/publish/publish",
-				"iconPath": "/static/home.png",
-				"selectedIconPath": "/static/home-selected.png",
-				"text": "发布"
-			},
-			{
-				"pagePath": "pages/mine/mine",
-				"iconPath": "/static/mine.png",
-				"selectedIconPath": "/static/mine-selected.png",
-				"text": "我的"
-			}
-		]
+    
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "app-plus": {
+      "background": "#efeff4"
+    }
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#ffde03",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [{
+        "pagePath": "pages/index/index",
+        "iconPath": "/static/home.png",
+        "selectedIconPath": "/static/home-selected.png",
+        "text": "首页"
+      }, {
+        "pagePath": "pages/publish/publish",
+        "iconPath": "/static/publish.png",
+        "selectedIconPath": "/static/publish-selected.png",
+        "text": "发布"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "/static/mine.png",
+        "selectedIconPath": "/static/mine-selected.png",
+        "text": "我的"
+      }
+    ]
 
-	}
+  }
 }

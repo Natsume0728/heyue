@@ -2,12 +2,14 @@
   <view>
     <view class="img-warp">
 
-      <image src="/static/default-avatar.png" class="img"></image>
+      <!-- <image src="/static/default-avatar.png" class="img"></image> -->
+      <u-avatar size="200"
+        src="https://ylc-car-pic.oss-cn-wuhan-lr.aliyuncs.com/carPic/3c74264a-2f96-4bb0-885f-3c0e43b5901a.jpg"></u-avatar>
     </view>
 
     <view class="btn-warp">
-      <button :disabled="false" class="btn" type="primary" open-type="getPhoneNumber"
-        @getphonenumber="getphonenumber">一键登录</button>
+      <button  class="btn" type="primary" open-type="getPhoneNumber"
+        @getphonenumber="getphonenumber" >一键登录</button>
 
       <!-- <button :disabled="false" class="btn" @click="login">一键登录</button> -->
     </view>
@@ -33,13 +35,13 @@
   } from 'vue';
   import REQUEST from '@/request/index.js'
   import {
-    useDefaultStore
-  } from '@/store/index.js'
+    useCarStore
+  } from '@/store/car.js'
 
-  const DefaultStore = useDefaultStore()
+  const CarStore = useCarStore()
   
   const login = async () => {
-    await DefaultStore.login()
+    await CarStore.login()
   }
 
   const checked = ref(false)
@@ -74,8 +76,15 @@
         })
         return
       }
-      await DefaultStore.loginByPhone(v.detail.code)
-      uni.navigateBack()
+      uni.showLoading({
+        title:'登录中...',
+        mask: true
+      })
+      await CarStore.loginByPhone(v.detail.code)
+      uni.hideLoading()
+      uni.switchTab({
+        url:'/pages/mine/mine'
+      })
     } catch (error) {
       uni.showToast({
         title: '请重试',
@@ -106,13 +115,10 @@
 
   .btn-warp {
     padding: 16rpx 200rpx;
-
     .btn {
-      background-color: white;
+      background-color: #ffde03 !important ;
       border-radius: 100rpx;
-      // color: $uni-primary;
-      background-color: $uni-primary;
-
+    color: #000000;
       &::after {
         border: none;
       }
@@ -120,7 +126,7 @@
   }
 
   .link {
-    color: $uni-primary;
+    color: #10458d;
   }
 
   .info-box {

@@ -9,7 +9,7 @@
 
     <view class="card">
       <view class="title">{{carInfo.carBrand}} {{carInfo.carSeries}} {{carInfo.carType}} </view>
-      <view class="price">{{carInfo.carPrice}}万</view>
+      <view class="price">{{carInfo.carPrice || '*' }}万</view>
       <view class="time">
         <view class="left">
           <view class="uni-info">发布时间:</view>
@@ -112,18 +112,43 @@
       <image v-for="pic in carInfo.carPics" :key="pic" :src="pic"></image>
     </view>
 
-    <view class="bottom-container">
+    <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 100 }" :draggable="true">
+      <template #trigger>
+        <view class="btn-coll" @click="collCar" style=" background-color: #ffde03;
+         border-radius: 50%;
+         width: 100rpx;
+         height: 100rpx;    
+         text-align: center;  font-weight: 600;
+         line-height: 100rpx;">
+          {{colled?'已收藏': '收藏'}}
+        </view>
+      </template>
+    </u-fab>
 
-      <button class="btn-status" type="primary" @click="updateCar">
 
+    <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 100 }" :draggable="true" position="left-bottom"
+      v-if="memberStatus == 2">
+      <template #trigger>
+        <view class="btn-coll" @click="updateCar" style=" background-color: #ffde03;
+         border-radius: 50%;
+         width: 100rpx;
+         height: 100rpx;    
+         text-align: center;  font-weight: 600;
+         line-height: 100rpx;">
+          {{carStatus === 1?'下架': '上架'}}
+        </view>
+      </template>
+    </u-fab>
+
+
+    <!--    <view class="bottom-container">
+
+      <button class="btn-status" @click="updateCar" v-if="memberStatus === 2">
         {{carStatus === 1?'下架': '上架'}}
       </button>
 
-      <button class="btn-coll" type="primary" @click="collCar">
-
-        {{colled?'已收藏': '收藏'}}
-      </button>
-    </view>
+   
+    </view> -->
 
   </view>
 </template>
@@ -132,8 +157,8 @@
   import REQUEST from '@/request/index.js'
   import dayjs from 'dayjs'
   import {
-    useDefaultStore
-  } from '@/store/index.js'
+    useCarStore
+  } from '@/store/car';
   import {
     ref,
     computed
@@ -143,19 +168,42 @@
     onShow
   } from '@dcloudio/uni-app'
 
-  const DefaultStore = useDefaultStore()
-  const userId = computed(() => DefaultStore.getUserId)
 
-  const carStatus = ref(2)
+  const onTrigger = () => {
+
+    uni.showToast({
+      title: '触发',
+      icon: 'none'
+    })
+  }
+
+  const CarStore = useCarStore()
+  const userId = computed(() => CarStore.getUserId)
+
+  const carStatus = computed(() => carInfo.value?.carStatus)
   const colled = ref(false)
   const carId = ref('')
   const carInfo = ref({})
+
+
   onLoad((query) => {
     carId.value = query.carId
   })
 
+  const memberStatus = ref(0)
+
+
   onShow(() => {
-    get_detail()
+    const _userId = wx.getStorageSync('userId')
+    const _memberStatus = wx.getStorageSync('memberStatus')
+    if (!_userId) {
+      CarStore.setUserInfo({})
+    } else {
+      memberStatus.value = _memberStatus
+      get_detail()
+    }
+
+
   })
 
   const timeFormate = (v) => {
@@ -178,42 +226,77 @@
 
 
   const collCar = async () => {
-    const {
-      data,
-      code
-    } = await REQUEST.post({
-      url: `/app-api/ylc/car/collCar`,
-      data: {
-        userId: userId.value,
-        carId: carId.value,
-        operate: colled.value ? 0 : 1
-      },
-    })
+    try {
+      const {
+        data,
+        code
+      } = await REQUEST.post({
+        url: `/app-api/ylc/car/collCar`,
+        data: {
+          userId: userId.value,
+          carId: carId.value,
+          operate: colled.value ? 0 : 1
+        },
+      })
+      if (code === 0) {
+        colled.value = true
+        uni.showToast({
+          title: '收藏成功',
+          icon: 'success'
+        })
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      uni.showToast({
+        title: '出错了！',
+        icon: 'none'
+      })
+    }
+
 
   }
   const updateCar = async () => {
-    // 1-上架；2-下架
-    const {
-      data,
-      code
-    } = await REQUEST.post({
-      url: `/app-api/ylc/car/updateCar`,
-      data: {
-        // userId: userId.value,
-        carId: carId.value,
-        carStatus: carStatus.value === 2 ? 1 : 2
-      },
-    })
+    try {
+      console.log(carStatus.value)
+      // 1-上架；2-下架
+      const {
+        data,
+        code
+      } = await REQUEST.post({
+        url: `/app-api/ylc/car/updateCar`,
+        data: {
+          // userId: userId.value,
+          carId: carId.value,
+          carStatus: carStatus.value === 2 ? 1 : 2
+        },
+      })
+      if (code === 0) {
+        colled.value = true
+        uni.showToast({
+          title: '操作成功',
+          icon: 'success'
+        })
+        get_detail()
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      uni.showToast({
+        title: '出错了！',
+        icon: 'none'
+      })
+    }
 
   }
 </script>
 
 <style lang="scss" scoped>
   .container {
-    padding-bottom: calc(120rpx + constant(safe-area-inset-bottom));
-    /*兼容 IOS<11.2*/
-    padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
-    /*兼容 IOS>11.2*/
+    // padding-bottom: calc(120rpx + constant(safe-area-inset-bottom));
+    // padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .swiper {
@@ -280,41 +363,48 @@
     }
   }
 
-  .bottom-container {
-    position: fixed;
-    z-index: 99;
-    bottom: 0;
-    background-color: white;
-    width: 100%;
-    height: 120rpx;
-    padding-bottom: constant(safe-area-inset-bottom);
-    /*兼容 IOS<11.2*/
-    padding-bottom: env(safe-area-inset-bottom);
-    /*兼容 IOS>11.2*/
-    padding-right: 32rpx;
+  // .bottom-container {
+  //   position: fixed;
+  //   z-index: 99;
+  //   bottom: 0;
+  //   background-color: white;
+  //   width: 100%;
+  //   height: 120rpx;
+  //   padding-bottom: constant(safe-area-inset-bottom);
+  //   /*兼容 IOS<11.2*/
+  //   padding-bottom: env(safe-area-inset-bottom);
+  //   /*兼容 IOS>11.2*/
+  //   padding-right: 32rpx;
 
-    display: flex;
-    justify-content: space-between;
-
-
-    .btn-status,
-    .btn-coll {
-      width: 180rpx;
-      height: 80rpx;
-      line-height: 80rpx;
-      margin: 0;
-      margin-top: 16rpx;
-      border-radius: 40rpx;
-    }
+  //   display: flex;
+  //   justify-content: space-between;
 
 
-    .btn-status {
-      margin-left: 32rpx;
-    }
+  //   .btn-status,
+  //   .btn-coll {
+  //     width: 180rpx;
+  //     height: 80rpx;
+  //     line-height: 80rpx;
+  //     margin: 0;
+  //     margin-top: 16rpx;
+  //     border-radius: 40rpx;
+  //     background-color: #ffde03 !important;
+  //     color: #000000;
+  //   }
 
-    .btn-coll {
-      margin-right: 32rpx;
-    }
 
-  }
+  //   .btn-status {
+  //     margin-left: 32rpx;
+  //   }
+
+  //   .btn-coll {
+  //     background-color: #ffde03 !important;
+  //     border-radius: 50%;
+  //     width: 100rpx;
+  //     height: 100rpx;
+  //     text-align: center;
+  //     line-height: 100rpx;
+  //   }
+
+  // }
 </style>

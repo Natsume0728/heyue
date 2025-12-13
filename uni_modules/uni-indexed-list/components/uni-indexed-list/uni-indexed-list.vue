@@ -148,11 +148,14 @@
 					let items = value.data.map(item => {
 						let obj = {}
 						obj['key'] = value.letter
-						obj['name'] = item
+						obj['name'] = item.name
 						obj['itemIndex'] = index
 						index++
 						obj.checked = item.checked ? item.checked : false
-						return obj
+						return {
+              ...item,
+              ...obj,
+            }
 					})
 					this.lists.push({
 						title: value.letter,

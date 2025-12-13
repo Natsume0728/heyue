@@ -17,11 +17,11 @@
   } from 'vue'
   import REQUEST from '@/request/index.js'
   import {
-    useDefaultStore
-  } from '@/store/index.js'
+    useCarStore
+  } from'@/store/car';
   import Card from '@/components/Card.vue'
 
-  const DefaultStore = useDefaultStore()
+  const DefaultStore = useCarStore()
   const userId = computed(() => DefaultStore.getUserId)
 
   const pageNo = ref(1)

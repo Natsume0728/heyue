@@ -1,29 +1,17 @@
-
-// #ifndef VUE3
-import Vue from 'vue'
-import App from './App'
-
-Vue.config.productionTip = false
-
-App.mpType = 'app'
-
-const app = new Vue({
-    ...App
-})
-app.$mount()
-// #endif
-
-// #ifdef VUE3
-import { createSSRApp } from 'vue'
+import {
+  createSSRApp
+} from 'vue'
 import App from './App.vue'
-import { createPinia } from 'pinia'
-const pinia = createPinia()
+import * as Pinia from 'pinia';
+import pinia from '@/store/index'
+import uViewPro from "@/uni_modules/uview-pro";
 
 export function createApp() {
   const app = createSSRApp(App)
-  app.use(pinia)
+  app.use(pinia);
+  app.use(uViewPro);
   return {
-    app
+    app,
+   Pinia: { pinia } // 根据 uni-app 要求返回
   }
 }
-// #endif
