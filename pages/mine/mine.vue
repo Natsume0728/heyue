@@ -6,7 +6,7 @@
       <u-avatar size="200"
         src="https://ylc-car-pic.oss-cn-wuhan-lr.aliyuncs.com/carPic/3c74264a-2f96-4bb0-885f-3c0e43b5901a.jpg"></u-avatar>
 
-      <view style="display: flex;flex-direction: column;justify-content: space-between;height: 200rpx;">
+      <view style="display: flex;flex-direction: column;justify-content: center; height: 200rpx;gap: 8rpx;">
         <view style="font-size: 40rpx;">{{nickname}}</view>
         <view style="font-size: 34rpx;">{{mobile}}</view>
         <view v-if="memberStatus == 0">未注册会员</view>
@@ -16,11 +16,33 @@
     </view>
 
     <u-cell-group>
-      <u-cell-item icon="rmb-circle-fill" title="成为会员" @click="handle_pay" v-if="memberStatus == 0"></u-cell-item>
+      <u-cell-item icon="rmb-circle-fill" @click="handle_pay" v-if="memberStatus == 0">
+        <template #title>
+          <text style="padding-left: 8rpx;">成为会员</text>
+        </template>
+      </u-cell-item>
       <!-- <u-cell-item icon="star-fill" title="有靓车会员" v-else-if="memberStatus == 1"></u-cell-item> -->
-      <u-cell-item icon="heart-fill" title="我的收藏" @click="to_coll"></u-cell-item>
-      <u-cell-item icon="setting-fill" title="个人信息" @click="to_account"></u-cell-item>
-      <u-cell-item icon="error-circle-fill" title="关于我们" @click="to_about"></u-cell-item>
+      <u-cell-item icon="car-fill" @click="to_mycar">
+        <template #title>
+          <text style="padding-left: 8rpx;">我的车辆</text>
+        </template>
+      </u-cell-item>
+      <u-cell-item icon="heart-fill" @click="to_coll">
+        <template #title>
+          <text style="padding-left: 8rpx;">我的收藏</text>
+        </template>
+      </u-cell-item>
+      <u-cell-item icon="setting-fill" @click="to_account">
+        <template #title>
+          <text style="padding-left: 8rpx;">个人信息</text>
+        </template>
+      </u-cell-item>
+      <!-- <u-cell-item icon="error-circle-fill" title="关于我们" @click="to_about"></u-cell-item> -->
+      <u-cell-item icon="phone-fill" @click="makePhoneCall">
+        <template #title>
+          <text style="padding-left: 8rpx;">联系我们</text>
+        </template>
+      </u-cell-item>
     </u-cell-group>
 
 
@@ -48,6 +70,14 @@
   const nickname = ref('有靓车用户')
 
   const CarStore = useCarStore()
+
+
+
+  const makePhoneCall = () => {
+    wx.makePhoneCall({
+      phoneNumber: '13517261384' //仅为示例，并非真实的电话号码
+    })
+  }
 
   const handle_pay = async () => {
     if (memberStatus.value != 0) return
@@ -99,7 +129,7 @@
     if (!_userId) {
       CarStore.setUserInfo({})
       uni.reLaunch({
-        url:'/pages/login/login'
+        url: '/pages/login/login'
       })
     } else {
       memberStatus.value = _memberStatus
@@ -132,6 +162,11 @@
       url: `/pages/account/account`
     })
   }
+  const to_mycar = () => {
+    uni.navigateTo({
+      url: '/pages/mine/mycar1'
+    })
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -148,7 +183,7 @@
       gap: 16px;
       padding-left: 64rpx;
       padding-bottom: 120rpx;
-      color: #ffde03;
+      // color: #ffde03;
     }
   }
 

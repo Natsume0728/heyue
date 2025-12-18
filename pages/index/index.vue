@@ -1,69 +1,69 @@
 <template>
   <view class="container">
-    <view class="img-warp">
+    <!--    <view class="img-warp">
       <image src="https://ylc-car-pic.oss-cn-wuhan-lr.aliyuncs.com/carPic/1bc92854-a35b-4519-839f-baf06e717199.png"
         mode='widthFix' style="width:100%"></image>
       <view class="kouhao">
         <view>做最纯粹的</view>
         <view>车商交易平台</view>
       </view>
-    </view>
-
-    <SearchBar @search="search">
-
-      <template v-slot:city>
-        <button size="mini" @click="to_shaixuan" class="text-btn" style="background-color: #ffde03; padding: 0 24rpx ;">
-          {{cityName}}<uni-icons type="down" size="12"></uni-icons>
-        </button>
-      </template>
-
-    </SearchBar>
-
-    <!--    <view class="shaixuan">
-
-      <button size="mini" class="text-btn" @click="to_shaixuan">
-        {{districtName}} <uni-icons type="down" size="12"></uni-icons>
-      </button>
-
-      <button size="mini" @click="to_shaixuan" class="text-btn">
-        {{brandName}} <uni-icons type="down" size="12"></uni-icons>
-      </button>
-
-
-
-      <button size="mini" class="text-btn" @click="to_paixu">
-        排序 <uni-icons type="down" size="12"></uni-icons>
-      </button>
-
-
-      <button size="mini" class="text-btn" @click="to_shaixuan">
-        筛选<uni-icons type="down" size="12"></uni-icons>
-      </button>
     </view> -->
+    <!-- 只能有一个根元素 -->
+    <view style="background-color: #f5f5f5; height: 200rpx;">
+      <SearchBar @search="search">
 
-    <u-dropdown ref="uDropdownRef" @open="open" @close="close">
-      <u-dropdown-item :title="districtName"></u-dropdown-item>
-      <u-dropdown-item :title="brandName"></u-dropdown-item>
+        <template v-slot:city>
+          <button size="mini" @click="to_quyu" class="text-btn" style=" padding: 0 24rpx ;">
+            {{city_name}}<uni-icons type="down" size="12"></uni-icons>
+          </button>
+        </template>
 
-      <u-dropdown-item v-model="paixu" title="排序" :options="[
+      </SearchBar>
+
+      <u-dropdown ref="uDropdownRef" @open="open" @close="close">
+        <u-dropdown-item v-model="cheyuan" title="车源" :options="[
+            {          label: '全部车源', value: 1        },
+            {          label: '新上车源', value: 2      },
+            {          label: '可批车源', value: 3        },
+        
+          ]" @change="paixu_change">
+        </u-dropdown-item>
+
+        <u-dropdown-item :title="quyu_name"></u-dropdown-item>
+        <u-dropdown-item :title="pingpai_name"></u-dropdown-item>
+
+
+
+
+        <u-dropdown-item v-model="paixu" title="排序" :options="[
         {          label: '默认排序', value: 1        },
         {          label: '价格最低', value: 2      },
         {          label: '价格最高', value: 3        },
         {          label: '表显里程最少', value: 4       },
         {          label: '上牌时间最新', value: 5       },
       ]" @change="change">
-      </u-dropdown-item>
+        </u-dropdown-item>
 
-      <u-dropdown-item title="筛选">
-      </u-dropdown-item>
-    </u-dropdown>
+        <u-dropdown-item title="筛选">
+        </u-dropdown-item>
 
 
-    <view style="margin:  0 32rpx;">
+      </u-dropdown>
 
-      <Card v-for="item in carList" :key="item.carId" :carInfo="item"> </Card>
+    </view>
 
-      <u-empty mode="data" v-if="carList.length === 0"></u-empty>
+
+    <view style="margin:  0 32rpx;" :style="{
+      height: `calc(${window_height}px - 200rpx)`
+    }">
+      <scroll-view scroll-y style="height: 100%;" @scrolltolower="scrolltolower">
+
+
+
+        <Card v-for="item in carList" :key="item.carId" :carInfo="item"> </Card>
+
+        <u-empty mode="data" v-if="carList.length === 0"></u-empty>
+      </scroll-view>
     </view>
 
 
@@ -87,18 +87,30 @@
   } from 'vue'
 
   const paixu = ref(undefined)
+  const cheyuan = ref(1)
 
   // 定义组件引用
   const uDropdownRef = ref(null)
+  const regionId = ref(0)
+
+
 
   // 定义事件处理函数
   const open = (index) => {
     // 展开某个下来菜单时，先关闭原来的其他菜单的高亮
     // 同时内部会自动给当前展开项进行高亮
-    if (index == 2) {
-
+    if (index === 1) {
+      uDropdownRef.value?.close()
+      if (city_id.value == 100000) return
+      to_quyu2()
+    } else if (index === 2) {
+      uDropdownRef.value?.close()
+      to_pingpai()
+    } else if (index == 0) {
       uDropdownRef.value?.highlight()
-    } else {
+    } else if (index == 3) {
+      uDropdownRef.value?.highlight()
+    } else if (index == 4) {
       uDropdownRef.value?.close()
       to_shaixuan()
     }
@@ -117,9 +129,33 @@
     // uDropdownRef.value?.highlight(xxx)
     console.log(value)
     queryParams.value.orderCol = value
-    reset_query()
+    queryParams.value.pageNo = 1
+    total.value = 0
+    carList.value = []
+    canLoadmore.value = true
     getList()
   }
+  const paixu_change = (value) => {
+    // 更多的细节，如有需要请自行根据业务逻辑进行处理
+    // uDropdownRef.value?.highlight(xxx)
+    console.log(value)
+    if (value == 1) {
+      queryParams.value.newStatus = undefined
+      queryParams.value.allSaleStatus = undefined
+    } else if (value == 2) {
+      queryParams.value.newStatus = true
+      queryParams.value.allSaleStatus = undefined
+    } else if (value == 3) {
+      queryParams.value.newStatus = undefined
+      queryParams.value.allSaleStatus = true
+    }
+    queryParams.value.pageNo = 1
+    total.value = 0
+    carList.value = []
+    canLoadmore.value = true
+    getList()
+  }
+
 
   const to_shaixuan = () => {
     uni.navigateTo({
@@ -127,21 +163,41 @@
       events: {
         from_shaixuan: (data) => {
           console.log('收到来自筛选页面B的数据：', data);
-          if (data.city_id) {
-            cityName.value = data.city_name
+          if (!data) {
+            queryParams.value = {
+              pageSize: 10,
+              pageNo: 1,
+            }
+            total.value = 0
+            carList.value = []
+            canLoadmore.value = true
+            city_id.value = undefined
+            city_name.value = '城市'
+            quyu_id.value = undefined
+            quyu_name.value = '区域'
+            pingpai_id.value = undefined
+            pingpai_name.value = '品牌'
+            getList()
+          } else {
+
+            if (data.cityId) {
+              city_name.value = data.city_name
+              city_id.value = data.cityId
+              quyu_id.value = null
+              quyu_name.value = '区域'
+            }
+            if (data.carBrand) {
+              pingpai_name.value = data.carBrand_name
+            } else {
+              pingpai_name.value = '品牌'
+            }
+            queryParams.value = {
+              ...queryParams.value,
+              ...data
+            }
+            reset_query()
+            getList()
           }
-          if (data.regionId) {
-            districtName.value = data.regionId_name
-          }
-          if (data.carBrand) {
-            brandName.value = data.carBrand_name
-          }
-          queryParams.value = {
-            ...queryParams.value,
-            ...data
-          }
-          reset_query()
-          getList()
         }
       },
       success: (res) => {
@@ -154,21 +210,7 @@
   let eventChannel = null
 
 
-  const value1 = ref(1)
-  // 定义选项数据
-  const options1 = ref([{
-      label: '默认排序',
-      value: 1,
-    },
-    {
-      label: '距离优先',
-      value: 2,
-    },
-    {
-      label: '价格优先',
-      value: 3,
-    }
-  ])
+
 
   const reset_query = () => {
     queryParams.value.pageNo = 1
@@ -177,100 +219,117 @@
     canLoadmore.value = true
   }
 
-  const to_chengshi = () => {
-    uni.navigateTo({
-      url: '/pages/index/chengshi',
-      events: {
-        from_chengshi: ({
-          item
-        }) => {
-          console.log('收到来自页面B的数据：', item);
-          queryParams.value.carRegionId = item.id
-          cityName.value = item.name
-          city_id.value = item.id
-          reset_query()
-          getList()
-        }
-      },
-      success: (res) => {
 
-      }
-    })
-  }
+
+  const city_name = ref('城市')
+  const city_id = ref(null)
+  const quyu_name = ref('区域')
+  const quyu_id = ref(null)
 
   const to_quyu = () => {
-    if (cityName.value === '城市') {
-      uni.showToast({
-        title: '请先选择城市',
-        icon: 'none'
-      })
-      return
-    }
-
-
+    uDropdownRef.value?.close()
+    console.log("toquyu")
     uni.navigateTo({
-      url: `/pages/index/quyu?city_id=${city_id.value}`,
+      url: `/pages/index/quyu`,
       events: {
-        from_quyu: ({
-          item
-        }) => {
-          console.log('收到来自页面B的数据：', item);
-          districtName.value = item.name
-          queryParams.value.carRegionId = item.id
-          reset_query()
+        from_child: (data) => {
+          console.log('收到来自省市的数据：', data);
+          city_id.value = data.id
+          city_name.value = data.name
+          quyu_id.value = null
+          quyu_name.value = '区域'
+          queryParams.value.cityId = data.id
+          queryParams.value.regionId = undefined
+          queryParams.value.pageNo = 1
+          total.value = 0
+          carList.value = []
+          canLoadmore.value = true
           getList()
         }
       },
       success: (res) => {
+        // 通过eventChannel向被打开页面传送数据
+        // res.eventChannel.emit('acceptDataFromOpenerPage', {
+        //   data: 'data from starter page'
+        // })
+      },
+      fail(err) {
+        console.log(err, 222)
+      }
+    })
+  }
 
+  const to_quyu2 = () => {
+    if (!city_id.value) return
+    uni.navigateTo({
+      url: `/pages/index/quyu2`,
+      events: {
+        from_child: (data) => {
+          console.log('收到来自quyu2页面B的数据2：', data);
+          if (data == null) {
+            quyu_id.value = undefined
+            quyu_name.value = '区域'
+            queryParams.value.regionId = undefined
+          } else {
+            quyu_id.value = data.id
+            quyu_name.value = data.name
+            queryParams.value.regionId = data.id
+          }
+
+
+          queryParams.value.pageNo = 1
+          total.value = 0
+          carList.value = []
+          canLoadmore.value = true
+          getList()
+        }
+      },
+      success: (res) => {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptDataFromOpenerPage', {
+          id: city_id.value,
+          name: city_name.value,
+        })
       }
     })
   }
 
 
+  const pingpai_id = ref(0)
+  const pingpai_name = ref('品牌')
   const to_pingpai = () => {
+    console.log("topingpai")
     uni.navigateTo({
-      url: '/pages/index/pingpai',
+      url: `/pages/index/pingpai`,
       events: {
-        from_pingpai: ({
-          item
-        }) => {
-          console.log('收到来自页面B的数据：', item);
-          queryParams.value.carBrand = item.name
-          brandName.value = item.name
-          reset_query()
+        from_child: (data) => {
+          console.log('收到来自品牌的数据：', data);
+          pingpai_id.value = data.id
+          pingpai_name.value = data.name
+          queryParams.value.carBrand = data.id
+          queryParams.value.pageNo = 1
+          total.value = 0
+          carList.value = []
+          canLoadmore.value = true
           getList()
         }
       },
       success: (res) => {
-
-      }
-    })
-  }
-
-  const to_paixu = () => {
-    uni.navigateTo({
-      url: '/pages/index/paixu',
-      events: {
-        from_paixu: ({
-          tag
-        }) => {
-          console.log('收到来自页面B的数据：', tag);
-          queryParams.value.orderCol = tag.code
-          reset_query()
-          getList()
-        }
+        // 通过eventChannel向被打开页面传送数据
+        // res.eventChannel.emit('acceptDataFromOpenerPage', {
+        //   data: 'data from starter page'
+        // })
       },
-      success: (res) => {
-
+      fail(err) {
+        console.log(err, 222)
       }
     })
   }
 
-  const brandName = ref('品牌')
-  const cityName = ref('城市')
-  const districtName = ref('区域')
-  const city_id = ref(null)
+
+
+
+
 
   const carList = ref([])
   const total = ref(0)
@@ -334,53 +393,115 @@
     }
   }
 
-  onLoad(() => {
-    console.log(333, )
-
-    wx.getSetting({
-      success(res) {
-        console.log(111, res)
-        if (!res.authSetting['scope.userFuzzyLocation']) {
-          wx.authorize({
-            scope: 'scope.userFuzzyLocation',
-            success() {
-              wx.getFuzzyLocation({
-                type: 'wgs84',
-                success(res) {
-                  console.log(444, res)
-                  const latitude = res.latitude
-                  const longitude = res.longitude
-                }
-              })
-
-            }
-          })
-        } else {
-          console.log(666, res)
-          wx.getFuzzyLocation({
-            type: 'wgs84',
-            success(res) {
-              console.log(555, res)
-              const latitude = res.latitude
-              const longitude = res.longitude
-            },
-            fail(err) {
-              console.log(err, 777)
-            }
-          })
-        }
+  const getCityInfoByLngLat = async (lng, lat) => {
+    const {
+      data,
+      code
+    } = await REQUEST.post({
+      url: `/app-api/ylc/car/getCityInfoByLngLat`,
+      data: {
+        lng,
+        lat
       },
-      fail() {
-        console.log(222)
-      }
     })
+    city_name.value = data.name
+    city_id.value = data.id
+    queryParams.value.cityId = data.id
+    if (data.id) {
+      reset_query()
+      const res = await REQUEST.post({
+        url: `/app-api/ylc/car/page`,
+        data: {
+          ...queryParams.value,
+          cityId: city_id.value
+        },
+      })
+      const {
+        list,
+        total: _total
+      } = res.data
+
+      carList.value = list
+      total.value = _total
+      if (carList.value.length >= total.value) {
+        canLoadmore.value = false
+      }
+    }
+
+  }
+
+  const window_height = ref(500)
+
+  onLoad(() => {
+    try {
+      const {
+        windowHeight
+      } = uni.getWindowInfo()
+      window_height.value = windowHeight
+
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userFuzzyLocation']) {
+            wx.authorize({
+              scope: 'scope.userFuzzyLocation',
+              success() {
+                wx.getFuzzyLocation({
+                  type: 'wgs84',
+                  success(res) {
+                    const latitude = res.latitude
+                    const longitude = res.longitude
+                    getCityInfoByLngLat(longitude, latitude)
+                  },
+                  fail() {
+                    throw new Error()
+                  }
+                })
+              },
+              fail() {
+                throw new Error()
+              }
+            })
+          } else {
+            wx.getFuzzyLocation({
+              type: 'wgs84',
+              success(res) {
+                // latitude 纬度，范围为 -90~90，负数表示南纬
+                // longitude 经度，范围为 -180~180，负数表示西经
+                const latitude = res.latitude
+                const longitude = res.longitude
+                getCityInfoByLngLat(longitude, latitude)
+              },
+              fail() {
+                throw new Error()
+              }
+            })
+          }
+        },
+        fail() {
+          throw new Error()
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      if (canLoadmore.value) {
+        getList()
+      }
+    }
+
   });
 
-  onShow(() => {
+  // onShow(() => {
+  //   if (canLoadmore.value) {
+  //     getList()
+  //   }
+  // })
+
+  const scrolltolower = () => {
     if (canLoadmore.value) {
+      queryParams.value.pageNo++
       getList()
     }
-  })
+  }
 
   onReachBottom(() => {
     if (canLoadmore.value) {
@@ -394,6 +515,8 @@
   .container {
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
+    // padding-top: 200rpx;
+    min-height: 100vh;
     font-size: 14px;
     line-height: 24px;
 
@@ -413,7 +536,7 @@
 
     .text-btn {
       padding: 0;
-      background-color: #ffde03;
+      // background-color: #ffde03;
       padding: 0 24rpx;
       margin: 0;
 

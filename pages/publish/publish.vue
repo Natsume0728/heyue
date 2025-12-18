@@ -5,10 +5,10 @@
         @progress="progress" @success="success" @fail="fail" />
     </uni-card>
     <uni-card title="车辆信息" sub-title="" extra="请认真填写核对车辆信息">
-      <u-form :model="formData" label-width="auto" label-align="right">
-        <u-form-item label="行驶证" name="name">
+      <u-form :model="formData" label-width="185" label-align="left">
+        <u-form-item label="VIN" name="name">
           <view style="display: flex;">
-            <u-input v-model="formData.carVIN" placeholder="请上传行驶证照片" />
+            <u-input v-model="formData.vinCode" :clearable="false" placeholder="上传行驶证照片自动识别" />
             <u-icon name="scan" size="40" color="#a6b1bf" @click="getCarInfoByVinPic"></u-icon>
           </view>
         </u-form-item>
@@ -17,9 +17,7 @@
           <u-input v-model="pingpai_name" :clearable="false" placeholder="请选择汽车品牌" type="select" @click="to_pingpai" />
         </u-form-item>
 
-        <!--        <u-form-item label="车系" name="carSeries">
-          <u-input v-model="formData.carSeries" placeholder="请输入车系" />
-        </u-form-item> -->
+
         <u-form-item label="车型" name="carType">
           <u-input v-model="car_type_name" :clearable="false" placeholder="请选择车型" type="select" @click="to_chexing" />
         </u-form-item>
@@ -36,73 +34,47 @@
         <u-form-item label="过户次数" name="carColor">
           <u-input v-model="guohu_name" :clearable="false" placeholder="请选择过户次数" type="select" @click="to_guohu" />
         </u-form-item>
-        <u-form-item label="年份" name="carColor">
+        <!--        <u-form-item label="年份" name="carColor">
           <u-input v-model="nianfen_name" :clearable="false" placeholder="请选择年份" type="select" @click="to_nianfen" />
-        </u-form-item>
+        </u-form-item> -->
         <u-form-item label="排放" name="carColor">
           <u-input v-model="paifang_name" :clearable="false" placeholder="请选择排放" type="select" @click="to_paifang" />
         </u-form-item>
-        <u-form-item label="所属省市" name="carRegionId">
-          <u-input v-model="city_name" :clearable="false" placeholder="请选择所属省市" type="select" @click="to_quyu" />
-        </u-form-item>
+        <!--        <u-form-item label="所属省市" name="carRegionId">
+          <u-input v-model="city_name" :clearable="false"
+           placeholder="请选择所属省市" type="select" @click="to_quyu" />
+        </u-form-item> -->
         <u-form-item label="所属区域" name="carRegionId">
           <u-input v-model="quyu_name" :clearable="false" placeholder="请选择所属区域" type="select" @click="to_quyu" />
         </u-form-item>
 
-
-        <u-form-item label="价格(万元)" name="carPrice">
-          <u-input v-model="formData.carPrice" placeholder="请输入价格" type="number">
-
+        <u-form-item label="表显里程" name="carUserTime">
+          <u-input v-model="formData.carMileage" placeholder="请输入表显里程（万公里）" type="digit" />
+        </u-form-item>
+        <u-form-item label="零售价(万元)" name="carPrice">
+          <u-input v-model="formData.salePrice" placeholder="请输入零售价格" type="digit">
           </u-input>
         </u-form-item>
-
-        <u-form-item label="使用年限" name="carUserTime">
-          <u-input v-model="formData.carUserTime" placeholder="请输入使用年限" />
+        <u-form-item label="批发价(万元)" name="carPrice">
+          <u-input v-model="formData.allSalePrice" placeholder="（选填）批发价格,不批发不填写" type="digit">
+          </u-input>
         </u-form-item>
-
-
-        <u-form-item label="里程" name="carCarMileage">
-          <u-input v-model="formData.carCarMileage" placeholder="请输入里程" />
+        <u-form-item label="指导价(万元)" name="carPrice">
+          <u-input v-model="formData.carPrice" placeholder="请输入指导价格" type="digit">
+          </u-input>
         </u-form-item>
-
-
-        <u-form-item label="排量" name="carDisplacement">
-          <u-input v-model="formData.carDisplacement" placeholder="请输入排量" />
+        <u-form-item label="车辆上牌时间" name="produceTime">
+          <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.registerTime" />
         </u-form-item>
-
-        <u-form-item label="汽车生产日期" name="produceTime">
-          <uni-datetime-picker type="datetime" v-model="formData.produceTime" />
+        <u-form-item label="年检到期时间" name="produceTime">
+          <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.yearckTime" />
         </u-form-item>
-        <u-form-item label="配置" name="carConfiguration">
-          <u-input v-model="formData.carConfiguration" placeholder="请输入配置" />
-        </u-form-item>
-        <u-form-item label="座位数" name="carSeat">
-          <u-input v-model="formData.carSeat" placeholder="请输入座位数" />
-        </u-form-item>
-
-        <u-form-item label="质保时间" name="carQualityTime">
-          <uni-datetime-picker type="datetime" v-model="formData.carQualityTime" />
-        </u-form-item>
-        <!--        <u-form-item label="所属区域" name="carRegionId">
-          <u-input  v-model="formData.carRegionId" placeholder="请输入所属区域" />
-        </u-form-item > -->
-
-        <u-form-item label="前轮胎尺寸" name="carFrontTyre">
-          <u-input v-model="formData.carFrontTyre" placeholder="请输入前轮胎尺寸" />
-        </u-form-item>
-        <u-form-item label="后轮胎尺寸" name="rearTyre">
-          <u-input v-model="formData.rearTyre" placeholder="请输入后轮胎尺寸" />
+        <u-form-item label="保险到期时间	" name="produceTime">
+          <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.insureTime" />
         </u-form-item>
         <u-form-item label="其他描述" name="carDescribe">
-          <u-input v-model="formData.carDescribe" placeholder="请输入其他描述" />
+          <u-input v-model="formData.carDescribe" type="textarea" placeholder="请输入其他描述" border />
         </u-form-item>
-        <!--        <u-form-item name="hobby" label="底价">
-          <u-input  v-model="formData.age" placeholder="请输入底价">
-            <template #right>
-              <view style="padding-right: 16rpx;">万元 </view>
-            </template>
-          </u-input>
-        </u-form-item > -->
       </u-form>
     </uni-card>
 
@@ -157,6 +129,11 @@
             const uploadResult = JSON.parse(data);
             const carData = uploadResult.data
             console.log(carData)
+            pingpai_name.value = carData.carBrandName || ''
+            car_type_name.value = carData.carTypeName || ''
+            biansuxiang_name.value = carData.carGearBoxName || ''
+            ranyou_name.value = carData.carFuelTypeName || ''
+            paifang_name.value = carData.emissionStaName || ''
             formData.value = {
               ...formData.value,
               ...carData
@@ -171,30 +148,12 @@
         });
       },
       fail: () => {
-        // uni.hideLoading()
+        uni.hideLoading()
       }
     });
   }
 
-  // const to_pingpai = () => {
-  //   uni.navigateTo({
-  //     url: '/pages/index/pingpai',
-  //     events: {
-  //       from_pingpai: ({
-  //         item
-  //       }) => {
-  //         console.log('收到来自页面B的数据：', item);
-  //         formData.value.carBrand = item.name
-  //         // brandName.value = item.name
-  //         // reset_query()
-  //         // getList()
-  //       }
-  //     },
-  //     success: (res) => {
-
-  //     }
-  //   })
-  // }
+  
 
   const pingpai_id = ref(0)
   const pingpai_name = ref('')
@@ -202,7 +161,7 @@
   const to_pingpai = () => {
     console.log("topingpai")
     uni.navigateTo({
-      url: `/pages/shaixuan/pingpai`,
+      url: `/pages/publish/pingpai`,
       events: {
         from_child: (data) => {
           console.log('收到来自品牌的数据：', data);
@@ -400,18 +359,18 @@
   const to_quyu = () => {
     console.log("toquyu")
     uni.navigateTo({
-      url: `/pages/shaixuan/quyu`,
+      url: `/pages/publish/quyu`,
       events: {
-        from_child: (data) => {
-          console.log('收到来自区域的数据：', data);
-          const {
-            city,
-            region
-          } = data
+        from_child: ({
+          city,
+          region
+        }) => {
+          console.log('收到来自区域的数据：', city, region);
+
           city_id.value = city.id
           city_name.value = city.name
           quyu_id.value = region.id
-          quyu_name.value = region.name
+          quyu_name.value = `${city.name}-${region.name}`
           formData.value.regionId = region.id
         }
       },
@@ -423,6 +382,27 @@
       },
       fail(err) {
         console.log(err, 222)
+      }
+    })
+  }
+
+  const to_quyu2 = () => {
+    if (!city_id.value) return
+    uni.navigateTo({
+      url: `/pages/shaixuan/quyu2`,
+      events: {
+        from_child: (data) => {
+          console.log('收到来自quyu2页面B的数据2：', data);
+          quyu_id.value = data.id
+          quyu_name.value = data.name
+        }
+      },
+      success: (res) => {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptDataFromOpenerPage', {
+          id: city_id.value,
+          name: city_name.value,
+        })
       }
     })
   }
@@ -537,6 +517,10 @@
   // * @param {object} params.updateTime 更新时间
   const handlePublish = async () => {
     try {
+      uni.showLoading({
+        mask: true,
+        title: 'loading'
+      })
       for (let index = 0; index < tempFilePaths.value.length; index++) {
         const filePath = tempFilePaths.value[index]
         console.log(filePath)
@@ -560,15 +544,19 @@
           title: '发布成功',
           icon: 'success'
         })
-        formData.value = {
-          userId: wx.getStorageSync("userId"),
-          carPics: []
-        }
-        tempFilePaths.value = []
-        file_picker.value?.clearFiles()
-        // uni.switchTab({
-        //   url: '/pages/index/index'
-        // })
+        setTimeout(() => {
+          formData.value = {
+            userId: wx.getStorageSync("userId"),
+            carPics: []
+          }
+          tempFilePaths.value = []
+          file_picker.value?.clearFiles()
+          uni.redirectTo({
+            url: '/pages/temp/temp'
+          })
+        }, 1500)
+
+
       } else {
         throw new Error();
       }
@@ -577,6 +565,8 @@
       uni.showToast({
         title: '请重试！'
       })
+    } finally {
+      uni.hideLoading()
     }
 
   }

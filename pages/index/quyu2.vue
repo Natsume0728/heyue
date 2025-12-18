@@ -1,9 +1,17 @@
 <template>
+  <u-cell-group :title="`全${title}`">
+    <u-cell-item :title="`全${title}`" :arrow="false" @click="confirm(null)"></u-cell-item>
+  </u-cell-group>
 
   <u-cell-group :title="title">
-    <u-cell-item :title="item.name" v-for="item in list" :key="item.id" :arrow="false"
+    <u-cell-item v-for="item in options" :key="item.id" :title="item.name" :arrow="false"
       @click="confirm(item)"></u-cell-item>
   </u-cell-group>
+
+
+
+
+  <!-- </view> -->
 </template>
 
 <script setup>
@@ -19,13 +27,15 @@
     getCurrentInstance,
     ref
   } from 'vue'
+  import {
+    CAR_BRANDS
+  } from '@/utils/constant.js'
+  import {
+    groupBy
+  } from 'lodash'
 
-
-  const title = ref('')
-  const list = ref([])
 
   const confirm = (item) => {
-    console.log(item)
     uni.navigateBack({
       delta: 1,
       success(res) {
@@ -37,19 +47,30 @@
 
   let eventChannel = null
 
-
+  const options = ref([])
+  const title = ref('')
+  const city = ref({})
   onLoad(() => {
     const instance = getCurrentInstance()
     eventChannel = instance.proxy.getOpenerEventChannel()
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     eventChannel.on('acceptDataFromOpenerPage', function(data) {
-      console.log(data, '取上一页面通过eventChannel传送到当前')
+      city.value = data
+      console.log(data)
       title.value = data.name
-      list.value = data.children
+      getDistrict(data.id)
     })
   })
 
-
+  const getDistrict = async (id) => {
+    const {
+      data,
+      code
+    } = await REQUEST.get({
+      url: `/app-api/ylc/car/getDistrict?cityId=${id}`,
+    })
+    options.value = data
+  }
 </script>
 
 <style lang="scss" scoped>

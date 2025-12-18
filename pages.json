@@ -10,6 +10,7 @@
   "pages": [{
       "path": "pages/index/index",
       "style": {
+        "disableScroll": true,
         "navigationBarTitleText": "首页"
       }
     },
@@ -32,6 +33,12 @@
       }
     },
     {
+      "path": "pages/index/pingpai2",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
       "path": "pages/index/chengshi",
       "style": {
         "navigationBarTitleText": "城市"
@@ -39,6 +46,18 @@
     },
     {
       "path": "pages/index/quyu",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+    {
+      "path": "pages/index/quyu22",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+    {
+      "path": "pages/index/quyu2",
       "style": {
         "navigationBarTitleText": "区域"
       }
@@ -56,11 +75,66 @@
       }
     },
     {
+      "path": "pages/mine/mycar1",
+      "style": {
+        "navigationBarTitleText": "我的车辆"
+      }
+    },
+    {
+      "path": "pages/mine/mycar2",
+      "style": {
+        "navigationBarTitleText": "我的车辆"
+      }
+    },
+    {
+      "path": "pages/mine/mycar3",
+      "style": {
+        "navigationBarTitleText": "我的车辆"
+      }
+    },
+    {
+      "path": "pages/mine/mycar4",
+      "style": {
+        "navigationBarTitleText": "我的车辆"
+      }
+    },
+    {
       "path": "pages/publish/publish",
       "style": {
         "navigationBarTitleText": "车源发布"
       }
     },
+    {
+      "path": "pages/publish/pingpai",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/publish/pingpai2",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/publish/pingpai3",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/publish/quyu",
+      "style": {
+        "navigationBarTitleText": "省市"
+      }
+    },
+    {
+      "path": "pages/publish/quyu2",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+
     {
       "path": "pages/login/login",
       "style": {
@@ -145,18 +219,10 @@
         "navigationBarTitleText": "车辆年份"
       }
     },
-    {
-      "path": "pages/shaixuan/pingpai",
-      "style": {
-        "navigationBarTitleText": "品牌"
-      }
-    },
-    {
-      "path": "pages/shaixuan/pingpai2",
-      "style": {
-        "navigationBarTitleText": "品牌"
-      }
-    },
+
+
+
+
     {
       "path": "pages/shaixuan/quyu",
       "style": {
@@ -164,12 +230,23 @@
       }
     },
     {
+      "path": "pages/shaixuan/quyu22",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+    {
       "path": "pages/shaixuan/quyu2",
       "style": {
         "navigationBarTitleText": "区域"
       }
+    },
+    {
+      "path": "pages/temp/temp",
+      "style": {
+        "navigationBarTitleText": "车源发布"
+      }
     }
-    
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

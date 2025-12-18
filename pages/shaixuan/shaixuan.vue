@@ -3,14 +3,15 @@
 
 
     <u-cell-group>
-      <u-cell-item title="地区选择" :value="quyu_name || '不限'"  @click="to_quyu"></u-cell-item>
+      <u-cell-item title="省市" :value="city_name || '不限'" @click="to_quyu"></u-cell-item>
       <u-cell-item title="车型" :value="car_type_name || '不限'" @click="to_chexing"></u-cell-item>
       <u-cell-item title="品牌" :value="pingpai_name || '不限'" @click="to_pingpai"></u-cell-item>
-      <u-cell-item title="排放"  :value="paifang_name || '不限'" @click="to_paifang"></u-cell-item>
+      <u-cell-item title="排放" :value="paifang_name || '不限'" @click="to_paifang"></u-cell-item>
 
       <u-cell-item title="年份" :value="nianfen_name || '不限'" @click="to_nianfen"></u-cell-item>
-      
-      <u-cell-item title="过户次数" :value="guohu_name || '不限'" @click="to_guohu"></u-cell-item>
+
+      <!-- <u-cell-item title="过户次数" :value="guohu_name || '不限'" @click="to_guohu"></u-cell-item> -->
+
       <u-cell-item title="燃油类型" :value="ranyou_name || '不限'" @click="to_ranyou"></u-cell-item>
       <u-cell-item title="颜色" :value="yanse_name || '不限'" @click="to_yanse"></u-cell-item>
       <u-cell-item title="变速箱" :value="biansuxiang_name || '不限'" @click="to_biansuxiang"></u-cell-item>
@@ -44,7 +45,7 @@
     CarFuelTypeEnum,
     CarTransferTimesEnum,
     CarYearEnum,
-    
+
   } from '@/utils/constant.js'
 
 
@@ -106,7 +107,7 @@
           console.log('收到来自页面B的数据2：', data);
           // const tar = CarEmissionEnum.find(el => el.code === code)
           paifang_code.value = data.code
-          // paifang_name.value = data.name
+          paifang_name.value = data.name
         }
       },
       success: (res) => {
@@ -187,10 +188,10 @@
       }
     })
   }
-  
+
   const nianfen_code = ref(0)
   const nianfen_name = ref('')
-  
+
   const to_nianfen = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/nianfen?code=${nianfen_code.value}`,
@@ -210,7 +211,7 @@
       }
     })
   }
-  
+
 
   const pingpai_id = ref(0)
   const pingpai_name = ref('')
@@ -218,7 +219,7 @@
   const to_pingpai = () => {
     console.log("topingpai")
     uni.navigateTo({
-      url: `/pages/shaixuan/pingpai`,
+      url: `/pages/index/pingpai`,
       events: {
         from_child: (data) => {
           console.log('收到来自品牌的数据：', data);
@@ -233,16 +234,14 @@
         // })
       },
       fail(err) {
-        console.log(err,222)
+        console.log(err, 222)
       }
     })
   }
-  
+
   const city_id = ref(0)
   const city_name = ref('')
-  const quyu_id = ref(0)
-  const quyu_name = ref('')
-  
+
   const to_quyu = () => {
     console.log("toquyu")
     uni.navigateTo({
@@ -250,11 +249,8 @@
       events: {
         from_child: (data) => {
           console.log('收到来自区域的数据：', data);
-          const {city, region} = data
-          city_id.value = city.id
-          city_name.value = city.name
-          quyu_id.value = region.id
-          quyu_name.value = region.name
+          city_id.value = data.id
+          city_name.value = data.name
         }
       },
       success: (res) => {
@@ -264,13 +260,18 @@
         // })
       },
       fail(err) {
-        console.log(err,222)
+        console.log(err, 222)
       }
     })
   }
-  
+
   const reset = () => {
-    vehicle_type.value = null
+    uni.navigateBack({
+      delta: 1,
+      success(res) {
+        eventChannel.emit('from_shaixuan',null);
+      }
+    })
   }
 
   const confirm = () => {
@@ -294,9 +295,7 @@
           carYear_name: nianfen_name.value || undefined,
           carBrand: pingpai_id.value || undefined,
           carBrand_name: pingpai_name.value || undefined,
-          regionId: quyu_id.value || undefined,
-          regionId_name: quyu_name.value || undefined,
-          city_id: city_id.value || undefined,
+          cityId: city_id.value || undefined,
           city_name: city_name.value || undefined,
         });
       }

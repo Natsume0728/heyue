@@ -1,24 +1,26 @@
 <template>
   <view class="card" @click="to_detail">
 
-    <image src="./test.jpeg" class="img"></image>
+    <image :src="carInfo.maiPic" class="img"></image>
 
     <view style="flex-grow:1">
-      <up-text text="我用十年青春,赴你最后之约"></up-text>
 
-      <view class="title"> {{carInfo.carBrand || "-"}} </view>
+      <view class="title"> {{carInfo.carBrandName || "-"}} </view>
       <view class="sub-title">
-        <view class="left">{{carInfo.produceTime}}年 / {{carInfo.carCarMileage}}万公里</view>
-        <view class="right"> {{carInfo.carPrice || '*' }}万</view>
+        <view>{{ timeFormate (carInfo.registerTime)  }}年上牌 </view>
+        <view>{{carInfo.carMileage || '-'}}万公里</view>
+        <view> {{carInfo.regionName}} </view>
       </view>
       <view class="bottom-title">
-        <view class="left">{{ timeFormate (carInfo.updateTime)  }} </view>
-        <view class="right">{{carInfo.carRegionId}}</view>
+        <view class="right"> {{carInfo.salePrice || '*' }}万</view>
+        <u-tag v-if="carInfo.allSalePrice" text="可批" type="warning" shape="circle" mode="dark" size="mini" />
+        <u-tag v-if="carInfo.newStatus" text="新上" type="warning" shape="circle" mode="dark" size="mini" />
       </view>
     </view>
   </view>
 </template>
-
+<!-- newStatus
+allSalePrice -->
 <script>
   import dayjs from 'dayjs'
   import REQUEST from '@/request/index.js'
@@ -34,7 +36,8 @@
     },
     methods: {
       timeFormate(v) {
-        return dayjs(v).format('YYYY/MM/DD HH:mm:ss')
+        return dayjs(v).format('YYYY')
+        // return dayjs(v).format('YYYY/MM/DD HH:mm:ss')
       },
 
       async to_detail() {
@@ -59,9 +62,10 @@
     border-radius: 16rpx;
     overflow: hidden;
     // box-shadow: 0 5px 0 0 $uni-info;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(0, 0, 0, 0.05);
+    // box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(0, 0, 0, 0.05);
     margin: 16rpx 0;
     padding: 16rpx;
+    background: white;
 
     .img {
       width: 240rpx;
@@ -85,23 +89,22 @@
       justify-content: space-between;
 
       font-size: 24rpx;
+      color: $uni-info;
 
-      .left {
-        color: $uni-info;
-      }
 
-      .right {
-        color: $uni-error;
-        font-weight: 600;
-        font-size: 28rpx;
-      }
     }
 
     .bottom-title {
       display: flex;
-      justify-content: space-between;
-      color: $uni-info;
-      font-size: 24rpx;
+      gap: 8rpx;
+      align-items: center;
+      // justify-content: space-between;
+      // color: $uni-info;
+      // font-size: 24rpx;
+
+      color: $uni-error;
+      font-weight: 600;
+      font-size: 28rpx;
 
     }
 

@@ -215,7 +215,7 @@
   }
 
   .btn {
-    background-color: #ffde03;
+    // background-color: #ffde03;
     color: black;
 
     &::after {

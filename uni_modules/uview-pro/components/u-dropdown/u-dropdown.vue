@@ -6,15 +6,18 @@
             :class="{ 'u-border-bottom': borderBottom }"
         >
             <view
-                class="u-dropdown__menu__item"
+                class="u-dropdown__menu__item" style="width: 20%;"
                 v-for="(item, index) in menuList"
                 :key="index"
                 @tap.stop="menuClick(index)"
             >
-                <view class="u-flex">
+                <view class="u-flex" style="width: 100%; justify-content: center;">
                     <text
                         class="u-dropdown__menu__item__text"
                         :style="{
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                             color: item.disabled
                                 ? 'var(--u-light-color)'
                                 : index === current || highlightIndex == index

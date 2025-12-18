@@ -1,25 +1,9 @@
 <template>
-  <!-- <view class="container"> -->
 
-
-  <!--    <u-index-list :scrollTop="scrollTop">
-     <view v-for="(item, index) in CAR_BRANDS" :key="index">
-        <u-index-anchor :index="index"  :id="index" :text="item.name"/>
-        <view class="list-cell">
-          {{item.name}}
-        </view>
-
-      </view>
-    </u-index-list> -->
-
-  <uni-indexed-list :options="options" :showSelect="false" @click="bindClick">
-
-
-
-  </uni-indexed-list>
-
-
-  <!-- </view> -->
+  <u-cell-group :title="title">
+    <u-cell-item :title="item.name" v-for="item in list" :key="item.id" :arrow="false"
+      @click="confirm(item)"></u-cell-item>
+  </u-cell-group>
 </template>
 
 <script setup>
@@ -35,42 +19,11 @@
     getCurrentInstance,
     ref
   } from 'vue'
-  import {
-    CAR_BRANDS
-  } from '@/utils/constant.js'
-  import {
-    groupBy
-  } from 'lodash'
-
-  // const list2 = ref([{
-  //   'letter': 'A',
-  //   'data': [
-  //     '阿克苏机场',
-  //     '阿拉山口机场',
-  //     '阿勒泰机场',
-  //     '阿里昆莎机场',
-  //     '安庆天柱山机场',
-  //     '澳门国际机场'
-  //   ]
-  // }, ])
 
 
-
-  const options = ref([])
-  const obj = groupBy(CAR_BRANDS, 'firstletter')
-  const _list = []
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      const element = obj[key];
-      _list.push({
-        letter: key,
-        data: element
-      })
-    }
-  }
-
-  options.value = _list.sort((a, b) => a.letter.charCodeAt(0) - b.letter.charCodeAt(0))
-
+  const title = ref('')
+  const list = ref([])
+  
   const bindClick = (e) => {
     console.log(e)
     if (!e.item?.children?.length) {
@@ -81,9 +34,9 @@
         }
       })
     } else {
-
+  
       uni.navigateTo({
-        url: `/pages/shaixuan/pingpai2`,
+        url: `/pages/publish/pingpai3`,
         events: {
           from_child: (data) => {
             console.log('收到来自页面B的数据2：', data);
@@ -93,7 +46,7 @@
                 eventChannel.emit('from_child', data);
               }
             })
-
+  
           }
         },
         success: (res) => {
@@ -103,31 +56,63 @@
       })
     }
   }
+  
 
-
+  const confirm = (item) => {
+    console.log(item)
+    if (!item?.children?.length) {
+      uni.navigateBack({
+        delta: 1,
+        success(res) {
+          eventChannel.emit('from_child', item);
+        }
+      })
+    } else {
+  
+      uni.navigateTo({
+        url: `/pages/shaixuan/pingpai3`,
+        events: {
+          from_child: (data) => {
+            console.log('收到来自pingpai3页面B的数据2：', data);
+            uni.navigateBack({
+              delta: 1,
+              success(res) {
+                eventChannel.emit('from_child', data);
+              }
+            })
+  
+          }
+        },
+        success: (res) => {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit('acceptDataFromOpenerPage', item)
+        }
+      })
+    }
+    // uni.navigateBack({
+    //   delta: 1,
+    //   success(res) {
+    //     // 4. 主动向 PageA 发送回复 (可选)
+    //     eventChannel.emit('from_child', item);
+    //   }
+    // })
+  }
 
   let eventChannel = null
 
 
   onLoad(() => {
-
     const instance = getCurrentInstance()
     eventChannel = instance.proxy.getOpenerEventChannel()
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-    // eventChannel.on('acceptDataFromOpenerPage', function(data) {
-    //   console.log(data)
-    // })
-    // getCarBrands()
+    eventChannel.on('acceptDataFromOpenerPage', function(data) {
+      console.log(data, '取上一页面通过eventChannel传送到当前')
+      title.value = data.name
+      list.value = data.children
+    })
   })
 
-  const getCarBrands = async () => {
-    const {
-      data,
-      code
-    } = await REQUEST.get({
-      url: `/app-api/ylc/car/getCarBrands`,
-    })
-  }
+
 </script>
 
 <style lang="scss" scoped>

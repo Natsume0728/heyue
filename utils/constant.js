@@ -5,7 +5,8 @@ export const ROLE_TYPES = {
   BACKSTAGE: 'backstage',
 }
 
-export const STAR_LIST = [{
+export const STAR_LIST = [
+  {
     label: '全部',
     value: -1
   },
@@ -35,7 +36,8 @@ export const STAR_LIST = [{
 // PROGRESS(1,"进行中"),
 // TRANSACTION(2,"交易中"),
 // COMPLETED(3,"已完成");
-export const taskStatusList = [{
+export const taskStatusList = [
+  {
     taskStatus: 0,
     taskStatusName: "未审核",
   },
@@ -54,7 +56,8 @@ export const taskStatusList = [{
 ]
 
 // 性别
-export const SEX_TYPES = [{
+export const SEX_TYPES = [
+  {
     label: '全部',
     value: -1
   },
@@ -159,29 +162,34 @@ export const CarGearBoxEnum = [
   },
 ]
 
+// 排放数据更新，1-国I、2-国II、3-国III、4-国IV、5-国V、6-国VI
 export const CarEmissionEnum = [{
     name: '不限',
     code: 0
   },
   {
-    name: '国一',
+    name: '国I',
     code: 1
   },
   {
-    name: '国二',
+    name: '国II',
     code: 2
   },
   {
-    name: '国三',
+    name: '国III',
     code: 3
   },
   {
-    name: '国四',
+    name: '国IV',
     code: 4
   },
   {
-    name: '国五',
+    name: '国V',
     code: 5
+  },
+  {
+    name: '国VI',
+    code: 6
   },
 ]
 
