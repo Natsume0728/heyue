@@ -31,9 +31,9 @@
         <u-form-item label="燃油类型" name="carColor">
           <u-input v-model="ranyou_name" :clearable="false" placeholder="请选择燃油类型" type="select" @click="to_ranyou" />
         </u-form-item>
-        <u-form-item label="过户次数" name="carColor">
+        <!--        <u-form-item label="过户次数" name="carColor">
           <u-input v-model="guohu_name" :clearable="false" placeholder="请选择过户次数" type="select" @click="to_guohu" />
-        </u-form-item>
+        </u-form-item> -->
         <!--        <u-form-item label="年份" name="carColor">
           <u-input v-model="nianfen_name" :clearable="false" placeholder="请选择年份" type="select" @click="to_nianfen" />
         </u-form-item> -->
@@ -59,21 +59,23 @@
           <u-input v-model="formData.allSalePrice" placeholder="（选填）批发价格,不批发不填写" type="digit">
           </u-input>
         </u-form-item>
-        <u-form-item label="指导价(万元)" name="carPrice">
+<!--        <u-form-item label="指导价(万元)" name="carPrice">
           <u-input v-model="formData.carPrice" placeholder="请输入指导价格" type="digit">
           </u-input>
-        </u-form-item>
+        </u-form-item> -->
         <u-form-item label="车辆上牌时间" name="produceTime">
           <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.registerTime" />
         </u-form-item>
-        <u-form-item label="年检到期时间" name="produceTime">
+        <!--        <u-form-item label="年检到期时间" name="produceTime">
           <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.yearckTime" />
-        </u-form-item>
-        <u-form-item label="保险到期时间	" name="produceTime">
+        </u-form-item> -->
+        <!--        <u-form-item label="保险到期时间	" name="produceTime">
           <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.insureTime" />
-        </u-form-item>
+        </u-form-item> -->
         <u-form-item label="其他描述" name="carDescribe">
-          <u-input v-model="formData.carDescribe" type="textarea" placeholder="请输入其他描述" border />
+          <u-input v-model="formData.carDescribe" count="300"
+           height="200"
+           type="textarea" placeholder="请输入其他描述" border maxlength="300" />
         </u-form-item>
       </u-form>
     </uni-card>
@@ -153,7 +155,7 @@
     });
   }
 
-  
+
 
   const pingpai_id = ref(0)
   const pingpai_name = ref('')

@@ -18,18 +18,18 @@
           <view class="uni-info"> 上牌时间: </view>
           <view>{{timeFormate(carInfo.registerTime)}}</view>
         </view>
-        <view class="right">
+        <!--        <view class="right">
           <view class="uni-info">年检到期时间:</view>
           <view>{{ timeFormate(carInfo.yearckTime)}}</view>
-        </view>
+        </view> -->
       </view>
 
-      <view class="time">
+      <!--      <view class="time">
         <view class="left">
           <view class="uni-info"> 保险到期时间: </view>
           <view>{{timeFormate(carInfo.insureTime)}}</view>
         </view>
-      </view>
+      </view> -->
 
       <view class="t-1"> 车源档案 </view>
 
@@ -94,7 +94,7 @@
         </uni-grid-item>
 
 
-        <uni-grid-item>
+<!--        <uni-grid-item>
           <view class="item">
             <view>{{carInfo.transferTimes}}</view>
             <view class="info">过户次数</view>
@@ -111,7 +111,7 @@
             <view>{{timeFormate(carInfo.insureTime)}}</view>
             <view class="info">保险到期</view>
           </view>
-        </uni-grid-item>
+        </uni-grid-item> -->
 
 
 
