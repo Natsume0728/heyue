@@ -1,26 +1,20 @@
 <template>
   <view class="container">
 
-    <u-subsection :list="[{
-      name: '审核中'
-    },
-    {
-      name: '在售'
-    },
-    {
-      name: '下架'
-    },
-    {
-      name: '已售'
-    }
-  ]" :current="1" @change="sectionChange"></u-subsection>
+    <u-subsection :list="[
+      { name: '审核中' },
+      { name: '在售' },
+      { name: '下架' },
+      { name: '已售' }  
+    ]" :current="2" @change="sectionChange"></u-subsection>
 
-
+    <Card v-for="item in carList" :key="item.carId" :carInfo="item" :saleStatus="2"> </Card>
   </view>
 </template>
 
 
 <script setup>
+  import Card from './Card.vue'
   import {
     onShow,
     onHide,
@@ -33,7 +27,7 @@
   } from "vue"
 
   import REQUEST from '@/request/index.js'
-  const list = ref([])
+  const carList = ref([])
   const total = ref(0)
   const pageSize = ref(10)
   const getMyCar = async () => {
@@ -45,16 +39,16 @@
       data: {
         "pageNo": 1,
         "pageSize": pageSize.value,
-        "saleStatus":1
+        "saleStatus":2
       }
     })
 
-    list.value = data.list
+    carList.value = data.list
     total.value = data.total || 0
   }
 
   onReachBottom(() => {
-    if (list.value.length >= total.value) return
+    if (carList.value.length >= total.value) return
     pageSize.value += 10
     getMyCar()
   })
@@ -67,7 +61,7 @@
   const sectionChange = (index) => {
     console.log(index)
     uni.redirectTo({
-      url: '/pages/mine/mycar' + (index + 1)
+        url: '/pages/mine/mycar' + index
     })
   }
 </script>
@@ -75,6 +69,7 @@
 <style lang="scss" scoped>
   .container {
     min-height: 100vh;
-    background-color: white;
+    // background-color: white;
+    padding: 0 32rpx;
   }
 </style>

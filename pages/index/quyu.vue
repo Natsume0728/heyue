@@ -1,7 +1,7 @@
 <template>
   <u-cell-group title="热门城市">
     <view style="display: flex;gap: 24rpx; flex-wrap: wrap; padding: 16rpx; padding-left: 32rpx;">
-      <u-tag text="全中国" type="success" @click="to_back({ id: undefined, name: '全国' })" />
+      <u-tag text="全国" type="success" @click="to_back({ id: undefined, name: '全国' })" />
       <u-tag :text="city.name" type="success" v-for="city in HotCity" :key="city.id" @click="to_back(city)" />
     </view>
   </u-cell-group>

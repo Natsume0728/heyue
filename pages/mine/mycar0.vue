@@ -6,9 +6,9 @@
       { name: '在售' },
       { name: '下架' },
       { name: '已售' }  
-    ]" :current="1" @change="sectionChange"></u-subsection>
+    ]" :current="0" @change="sectionChange"></u-subsection>
 
-    <Card v-for="item in carList" :key="item.carId" :carInfo="item" :saleStatus="1"> </Card>
+    <Card v-for="item in carList" :key="item.carId" :carInfo="item" :saleStatus="0"> </Card>
   </view>
 </template>
 
@@ -39,7 +39,7 @@
       data: {
         "pageNo": 1,
         "pageSize": pageSize.value,
-        "saleStatus": 1
+        "saleStatus": 0
       }
     })
 

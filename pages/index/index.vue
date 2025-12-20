@@ -369,7 +369,7 @@
   const search = async ({
     value
   }) => {
-    if (!value) return
+    // if (!value) return
     reset_query()
     const {
       data,
@@ -378,7 +378,7 @@
       url: `/app-api/ylc/car/page`,
       data: {
         ...queryParams.value,
-        searchCon: value
+        searchCon: value || undefined
       },
     })
     const {

@@ -59,7 +59,7 @@
           <u-input v-model="formData.allSalePrice" placeholder="（选填）批发价格,不批发不填写" type="digit">
           </u-input>
         </u-form-item>
-<!--        <u-form-item label="指导价(万元)" name="carPrice">
+        <!--        <u-form-item label="指导价(万元)" name="carPrice">
           <u-input v-model="formData.carPrice" placeholder="请输入指导价格" type="digit">
           </u-input>
         </u-form-item> -->
@@ -73,18 +73,14 @@
           <uni-datetime-picker type="datetime" return-type="timestamp" v-model="formData.insureTime" />
         </u-form-item> -->
         <u-form-item label="其他描述" name="carDescribe">
-          <u-input v-model="formData.carDescribe" count="300"
-           height="200"
-           type="textarea" placeholder="请输入其他描述" border maxlength="300" />
+          <u-input v-model="formData.carDescribe" count="300" height="200" type="textarea" placeholder="请输入其他描述" border
+            maxlength="300" />
         </u-form-item>
       </u-form>
     </uni-card>
 
     <view style="padding: 0 32rpx;">
-
-      <button @click="handlePublish" class="publish-btn">
-        发布
-      </button>
+      <button @click="handlePublish" class="publish-btn"> 发布 </button>
     </view>
   </view>
 </template>
@@ -98,10 +94,7 @@
     ref
   } from 'vue';
 
-
-
   const getCarInfoByVinPic = () => {
-
     uni.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -155,11 +148,8 @@
     });
   }
 
-
-
   const pingpai_id = ref(0)
   const pingpai_name = ref('')
-
   const to_pingpai = () => {
     console.log("topingpai")
     uni.navigateTo({
@@ -186,7 +176,6 @@
 
   const car_type = ref(0)
   const car_type_name = ref('')
-
   const to_chexing = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/chexing?car_type=${car_type.value}`,
@@ -210,7 +199,6 @@
 
   const guohu_code = ref(0)
   const guohu_name = ref('')
-
   const to_guohu = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/guohu?code=${guohu_code.value}`,
@@ -234,7 +222,6 @@
 
   const nianfen_code = ref(0)
   const nianfen_name = ref('')
-
   const to_nianfen = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/nianfen?code=${nianfen_code.value}`,
@@ -258,7 +245,6 @@
 
   const biansuxiang_code = ref(0)
   const biansuxiang_name = ref('')
-
   const to_biansuxiang = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/biansuxiang?code=${biansuxiang_code.value}`,
@@ -279,11 +265,8 @@
     })
   }
 
-
-
   const yanse_code = ref(0)
   const yanse_name = ref('')
-
   const to_yanse = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/yanse?code=${yanse_code.value}`,
@@ -307,7 +290,6 @@
 
   const ranyou_code = ref(0)
   const ranyou_name = ref('')
-
   const to_ranyou = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/ranyou?code=${ranyou_code.value}`,
@@ -331,7 +313,6 @@
 
   const paifang_code = ref(0)
   const paifang_name = ref('')
-
   const to_paifang = () => {
     uni.navigateTo({
       url: `/pages/shaixuan/paifang?code=${paifang_code.value}`,
@@ -357,7 +338,6 @@
   const city_name = ref('')
   const quyu_id = ref(0)
   const quyu_name = ref('')
-
   const to_quyu = () => {
     console.log("toquyu")
     uni.navigateTo({
@@ -409,54 +389,6 @@
     })
   }
 
-  // const to_chengshi = () => {
-  //   uni.navigateTo({
-  //     url: '/pages/index/chengshi',
-  //     events: {
-  //       from_chengshi: ({
-  //         item
-  //       }) => {
-  //         console.log('收到来自页面B的数据：', item);
-  //         formData.value.cityName = item.name
-  //         formData.value.cityId = item.id
-
-  //         // queryParams.value.carRegionId = item.id
-  //         // cityName.value = item.name
-  //         // city_id.value = item.id
-  //         // reset_query()
-  //         // getList()
-  //       }
-  //     },
-  //     success: (res) => {
-
-  //     }
-  //   })
-  // }
-
-  // const to_quyu = () => {
-  //   if (!formData.value.cityId) {
-
-  //     return
-  //   }
-
-
-  //   uni.navigateTo({
-  //     url: `/pages/index/quyu?city_id=${formData.value.cityId}`,
-  //     events: {
-  //       from_quyu: ({
-  //         item
-  //       }) => {
-  //         console.log('收到来自页面B的数据：', item);
-  //         formData.value.carRegionName = item.name
-  //         formData.value.carRegionId = item.id
-  //       }
-  //     },
-  //     success: (res) => {
-
-  //     }
-  //   })
-  // }
-
   const imageValue = ref([])
   const formData = ref({
     userId: wx.getStorageSync("userId"),
@@ -495,28 +427,6 @@
     });
   }
 
-  // * @param {number} params.userId 用户id
-  // * @param {string} params.carBrand 汽车品牌
-  // * @param {string} params.carSeries 车系
-  // * @param {string} params.carType 车型
-  // * @param {object} params.carPrice 价格
-  // * @param {number} params.carUserTime 使用年限
-  // * @param {number} params.transferCount 过户次数
-  // * @param {object} params.carCarMileage 里程
-  // * @param {string} params.carColor 汽车颜色
-  // * @param {string} params.carGearBox 变数箱
-  // * @param {object} params.carDisplacement 排量
-  // * @param {object} params.produceTime 汽车生产日期
-  // * @param {string} params.carConfiguration 配置
-  // * @param {number} params.carSeat 座位数
-  // * @param {string} params.carFuelType 燃料类型
-  // * @param {number} params.carQualityTime 质保时间
-  // * @param {number} params.carRegionId 所属区域
-  // * @param {string} params.carFrontTyre 前轮胎尺寸
-  // * @param {string} params.rearTyre 后轮胎尺寸
-  // * @param {string} params.carDescribe 其他描述
-  // * @param {object} params.createTime 创建时间
-  // * @param {object} params.updateTime 更新时间
   const handlePublish = async () => {
     try {
       uni.showLoading({

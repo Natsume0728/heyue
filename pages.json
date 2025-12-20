@@ -75,6 +75,12 @@
       }
     },
     {
+      "path": "pages/mine/mycar0",
+      "style": {
+        "navigationBarTitleText": "我的车辆"
+      }
+    },
+    {
       "path": "pages/mine/mycar1",
       "style": {
         "navigationBarTitleText": "我的车辆"
@@ -92,12 +98,7 @@
         "navigationBarTitleText": "我的车辆"
       }
     },
-    {
-      "path": "pages/mine/mycar4",
-      "style": {
-        "navigationBarTitleText": "我的车辆"
-      }
-    },
+
     {
       "path": "pages/publish/publish",
       "style": {

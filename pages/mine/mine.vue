@@ -164,7 +164,7 @@
   }
   const to_mycar = () => {
     uni.navigateTo({
-      url: '/pages/mine/mycar1'
+      url: '/pages/mine/mycar0'
     })
   }
 </script>

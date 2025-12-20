@@ -15,8 +15,7 @@
       </view>
       <view class="time">
         <view class="left">
-          <view class="uni-info"> 上牌时间: </view>
-          <view>{{timeFormate(carInfo.registerTime)}}</view>
+          <view class="uni-info"> 上牌时间: {{timeFormate(carInfo.registerTime)}}</view>
         </view>
         <!--        <view class="right">
           <view class="uni-info">年检到期时间:</view>
@@ -69,7 +68,7 @@
         </uni-grid-item>
         <uni-grid-item>
           <view class="item">
-            <view>{{carInfo.displacement}}</view>
+            <view>{{carInfo.displacement || '-'}}</view>
             <view class="info"> 排量</view>
           </view>
         </uni-grid-item>
