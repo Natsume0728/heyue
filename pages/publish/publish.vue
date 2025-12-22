@@ -2,7 +2,7 @@
   <view class="container">
     <uni-card title="车辆图片">
       <uni-file-picker v-model="imageValue" ref='file_picker' fileMediatype="image" mode="grid" @select="select"
-        @progress="progress" @success="success" @fail="fail" />
+        @progress="progress" @success="success" @fail="fail" @delete='deleteImage' />
     </uni-card>
     <uni-card title="车辆信息" sub-title="" extra="请认真填写核对车辆信息">
       <u-form :model="formData" label-width="185" label-align="left">
@@ -86,19 +86,95 @@
 </template>
 
 <script setup>
+  import {
+    onShow,
+    onLoad,
+    onReady
+  } from '@dcloudio/uni-app'
+
   import REQUEST from '@/request/index.js'
   import {
     BASE_URL
   } from "@/request/index";
   import {
+    computed,
+    getCurrentInstance,
     ref
-  } from 'vue';
+  } from 'vue'
+  let eventChannel = null
+  const carInfo = ref(null)
+
+  const get_detail = async (carId) => {
+    try {
+      const {
+        data,
+        code,
+        msg
+      } = await REQUEST.get({
+        url: `/app-api/ylc/car/getCar`,
+        data: {
+          carId: carId,
+        },
+      })
+      if (code == 0) {
+        carInfo.value = data
+        formData.value = {
+          ...formData.value,
+          ...data
+        }
+        imageValue.value = data.carPics.map(el => {
+          const file = el.split('.')
+          return {
+            "name": file[0],
+            "extname": file[1],
+            "url": el,
+
+          }
+        }) || []
+        pingpai_name.value = data.carBrandName
+        car_type_name.value = data.carTypeName
+        biansuxiang_name.value = data.carGearBoxName
+        yanse_name.value = data.carColorName
+        ranyou_name.value = data.carFuelTypeName
+        paifang_name.value = data.emissionStaName
+        quyu_name.value = `${data.cityName}-${data.regionName}`
+
+        wx.removeStorageSync('carId')
+
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      carInfo.value = null
+      uni.showToast({
+        title: '系统异常',
+        icon: 'error'
+      })
+    }
+
+  }
+
+  onShow(() => {
+    // const instance = getCurrentInstance()
+    // eventChannel = instance.proxy.getOpenerEventChannel()
+    // // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
+    // eventChannel.on('acceptDataFromOpenerPage', function(data) {
+    //   console.log(data)
+    // })
+    const carId = wx.getStorageSync('carId')
+    console.log(carId)
+
+    if (carId) {
+      get_detail(carId)
+
+    }
+  })
 
   const getCarInfoByVinPic = () => {
     uni.chooseMedia({
       count: 1,
       mediaType: ['image'],
-      sizeType: ['compressed'],
+      // sizeType: ['compressed'],
       success: (chooseImageRes) => {
         const tempFile = chooseImageRes.tempFiles[0];
         console.log(tempFile)
@@ -168,9 +244,7 @@
         //   data: 'data from starter page'
         // })
       },
-      fail(err) {
-        console.log(err, 222)
-      }
+
     })
   }
 
@@ -368,26 +442,7 @@
     })
   }
 
-  const to_quyu2 = () => {
-    if (!city_id.value) return
-    uni.navigateTo({
-      url: `/pages/shaixuan/quyu2`,
-      events: {
-        from_child: (data) => {
-          console.log('收到来自quyu2页面B的数据2：', data);
-          quyu_id.value = data.id
-          quyu_name.value = data.name
-        }
-      },
-      success: (res) => {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', {
-          id: city_id.value,
-          name: city_name.value,
-        })
-      }
-    })
-  }
+
 
   const imageValue = ref([])
   const formData = ref({
@@ -397,33 +452,41 @@
   const tempFilePaths = ref([])
 
   const uploadFile = (filePath) => {
-    return new Promise((resolve, reject) => {
-      wx.uploadFile({
-        url: `${BASE_URL}/app-api/ylc/car/uploadPic`,
-        filePath: filePath,
-        header: {
-          Authorization: `Bearer ${ wx.getStorageSync("accessToken")}`,
-          'tenant-id': 1
-        },
-        name: 'file',
-        formData: {
-          'user': 'test'
-        },
+    console.warn(filePath, 'filePathfilePathfilePath')
 
-        success({
-          data
-        }) {
-          const uploadResult = JSON.parse(data);
-          const fileUrl = uploadResult.data
-          console.log(fileUrl)
-          resolve(fileUrl);
-          //do something
-        },
-        fail(res) {
-          console.log(res)
-          reject()
-        },
-      });
+    return new Promise((resolve, reject) => {
+      if (filePath.startsWith('http://tmp/')) {
+        wx.uploadFile({
+          url: `${BASE_URL}/app-api/ylc/car/uploadPic`,
+          filePath: filePath,
+          header: {
+            Authorization: `Bearer ${ wx.getStorageSync("accessToken")}`,
+            'tenant-id': 1
+          },
+          name: 'file',
+          formData: {
+            'user': 'test'
+          },
+
+          success({
+            data
+          }) {
+            const uploadResult = JSON.parse(data);
+            const fileUrl = uploadResult.data
+            console.log(fileUrl)
+            resolve(fileUrl);
+            //do something
+          },
+          fail(res) {
+            console.log(res)
+            reject()
+          },
+        });
+      } else {
+        resolve(filePath)
+      }
+
+
     });
   }
 
@@ -433,10 +496,10 @@
         mask: true,
         title: 'loading'
       })
-      for (let index = 0; index < tempFilePaths.value.length; index++) {
-        const filePath = tempFilePaths.value[index]
-        console.log(filePath)
-        const url = await uploadFile(filePath)
+      for (let index = 0; index < imageValue.value.length; index++) {
+        const file = imageValue.value[index]
+        console.log(file)
+        const url = await uploadFile(file.path)
         formData.value.carPics.push(url)
         if (index === 0) {
           formData.value.maiPic = url
@@ -461,7 +524,7 @@
             userId: wx.getStorageSync("userId"),
             carPics: []
           }
-          tempFilePaths.value = []
+          imageValue.value = []
           file_picker.value?.clearFiles()
           uni.redirectTo({
             url: '/pages/temp/temp'
@@ -485,17 +548,25 @@
 
   const file_picker = ref()
   const select = (e) => {
-    console.log('选择文件：', e.tempFilePaths)
-    tempFilePaths.value = e.tempFilePaths
+    console.log('选择文件1：', e, imageValue.value)
+    // tempFilePaths.value = e.tempFilePaths
+    imageValue.value = [
+      ...imageValue.value,
+      ...e.tempFiles
+    ]
   }
   const progress = (e) => {
-    console.log('上传进度：', e)
+    console.log('上传进度2：', e)
   }
   const success = (e) => {
-    console.log('上传进度：', e)
+    console.log('上传进度3：', e)
   }
   const fail = (e) => {
-    console.log('上传失败：', e)
+    console.log('上传失败4：', e)
+  }
+  const deleteImage = (e) => {
+    console.log('deleteImage：', e)
+    imageValue.value = imageValue.value.filter((el, index) => index !== e.index)
   }
 </script>
 

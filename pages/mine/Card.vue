@@ -13,9 +13,9 @@
       </view>
       <view class="bottom-title">
         <view class="right"> {{carInfo.salePrice || '*' }}万</view>
-<!--        <u-button v-if="saleStatus == 0" size="mini" :custom-style="{ margin: '0' }" @click="updateCar(1)">
+        <u-button v-if="saleStatus == 0" size="mini" :custom-style="{ margin: '0' }" @click="to_edit(carInfo.carId)">
           编辑
-        </u-button> -->
+        </u-button>
 
         <u-button v-if="saleStatus ==1" size="mini" type="error" :custom-style="{ margin: '0' }" @click="updateCar(2)">
           下架
@@ -76,6 +76,16 @@ allSalePrice -->
         uni.redirectTo({
           url: '/pages/mine/mycar' + carStatus
         })
+      },
+
+      to_edit(carId) {
+        // console.log(122121)
+        uni.switchTab({
+          url: `/pages/publish/publish`
+        })
+
+        wx.setStorageSync('carId', carId)
+
       }
     }
   }

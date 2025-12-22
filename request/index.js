@@ -27,6 +27,7 @@ class Request {
         url: BASE_URL + param.url,
         data: param.data || {},
         method: param.method || 'POST',
+        timeout: 180000,
         header,
         complete: (res) => {
           if (res?.statusCode === 200) {

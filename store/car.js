@@ -67,6 +67,7 @@ export const useCarStore = Pinia.defineStore('car', {
         wx.setStorageSync("refreshToken", res.data.refreshToken);
         wx.setStorageSync("userId", res.data.userId);
         wx.setStorageSync("memberStatus", res.data.memberStatus);
+        // wx.setStorageSync("expireTime", res.data.expireTime);
         const {
           data,
           code
@@ -76,6 +77,7 @@ export const useCarStore = Pinia.defineStore('car', {
 
         wx.setStorageSync('nickname', data.nickname)
         wx.setStorageSync('mobile', data.mobile)
+        wx.setStorageSync('expireTime', data.expireTime)
       } else {
         throw new Error()
       }

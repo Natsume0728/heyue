@@ -4,13 +4,13 @@
     <view class="header">
 
       <u-avatar size="200"
-        src="https://ylc-car-pic.oss-cn-wuhan-lr.aliyuncs.com/carPic/3c74264a-2f96-4bb0-885f-3c0e43b5901a.jpg"></u-avatar>
+        src="https://ylc-car-pic.oss-cn-wuhan-lr.aliyuncs.com/carPic/046252c3-0230-4a60-8f77-bb287cb1b81f.jpg"></u-avatar>
 
       <view style="display: flex;flex-direction: column;justify-content: center; height: 200rpx;gap: 8rpx;">
         <view style="font-size: 40rpx;">{{nickname}}</view>
         <view style="font-size: 34rpx;">{{mobile}}</view>
         <view v-if="memberStatus == 0">未注册会员</view>
-        <view v-else-if="memberStatus == 1">平台会员</view>
+        <view v-else-if="memberStatus == 1">平台会员({{timeFormate(expireTime)}}到期)</view>
         <view v-else-if="memberStatus == 2">管理员</view>
       </view>
     </view>
@@ -38,14 +38,24 @@
         </template>
       </u-cell-item>
       <!-- <u-cell-item icon="error-circle-fill" title="关于我们" @click="to_about"></u-cell-item> -->
-      <u-cell-item icon="phone-fill" @click="makePhoneCall">
+      <!--      <u-cell-item icon="phone-fill" @click="makePhoneCall">
         <template #title>
-          <text style="padding-left: 8rpx;">联系我们</text>
+          <u-button
+            open-type="contact"
+            :customStyle="{
+              height: '60rpx',
+              marginTop: '100rpx',
+            }"
+          >联系我们</u-button>
         </template>
-      </u-cell-item>
+      </u-cell-item> -->
     </u-cell-group>
 
-
+    <u-button open-type="contact" type="primary" :customStyle="{
+        margin: '100rpx 32rpx 0',
+      }">
+      联系我们
+    </u-button>
 
   </view>
 </template>
@@ -61,7 +71,7 @@
     computed,
     ref
   } from "vue"
-
+  import dayjs from 'dayjs'
   import {
     useCarStore
   } from '@/store/car';
@@ -71,7 +81,9 @@
 
   const CarStore = useCarStore()
 
-
+  const timeFormate = (v) => {
+    return dayjs(v).format('YYYY/MM/DD')
+  }
 
   const makePhoneCall = () => {
     wx.makePhoneCall({
@@ -121,10 +133,12 @@
   const userId = ref(null)
   const memberStatus = ref(0)
   const mobile = ref('')
+  const expireTime = ref(0)
   onShow(() => {
     const _userId = wx.getStorageSync('userId')
     const _memberStatus = wx.getStorageSync('memberStatus')
     const _mobile = wx.getStorageSync('mobile')
+    const _expireTime = wx.getStorageSync('expireTime')
 
     if (!_userId) {
       CarStore.setUserInfo({})
@@ -136,6 +150,7 @@
       userId.value = _userId
       nickname.value = wx.getStorageSync('nickname') || '有靓车用户'
       mobile.value = wx.getStorageSync('mobile') || ''
+      expireTime.value = wx.getStorageSync('expireTime') || ''
     }
     console.log(userId.value, 'userId')
   })

@@ -24,40 +24,6 @@
   const title = ref('')
   const list = ref([])
   
-  const bindClick = (e) => {
-    console.log(e)
-    if (!e.item?.children?.length) {
-      uni.navigateBack({
-        delta: 1,
-        success(res) {
-          eventChannel.emit('from_child', e.item);
-        }
-      })
-    } else {
-  
-      uni.navigateTo({
-        url: `/pages/publish/pingpai3`,
-        events: {
-          from_child: (data) => {
-            console.log('收到来自页面B的数据2：', data);
-            uni.navigateBack({
-              delta: 1,
-              success(res) {
-                eventChannel.emit('from_child', data);
-              }
-            })
-  
-          }
-        },
-        success: (res) => {
-          // 通过eventChannel向被打开页面传送数据
-          res.eventChannel.emit('acceptDataFromOpenerPage', e.item)
-        }
-      })
-    }
-  }
-  
-
   const confirm = (item) => {
     console.log(item)
     if (!item?.children?.length) {
@@ -68,9 +34,8 @@
         }
       })
     } else {
-  
       uni.navigateTo({
-        url: `/pages/shaixuan/pingpai3`,
+        url: `/pages/publish/pingpai3`,
         events: {
           from_child: (data) => {
             console.log('收到来自pingpai3页面B的数据2：', data);
@@ -89,13 +54,6 @@
         }
       })
     }
-    // uni.navigateBack({
-    //   delta: 1,
-    //   success(res) {
-    //     // 4. 主动向 PageA 发送回复 (可选)
-    //     eventChannel.emit('from_child', item);
-    //   }
-    // })
   }
 
   let eventChannel = null

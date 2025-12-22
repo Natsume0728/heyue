@@ -1,8 +1,14 @@
 <template>
-  <u-cell-group>
-    <u-cell-item :title="city.name" v-for="city in citys" :key="city.name" :arrow="false"
-      @click="to_back(city)"></u-cell-item>
+
+
+  <u-cell-group :title="title">
+    <u-cell-item v-for="item in options" :key="item.id" :title="item.name" :arrow="false" @click="confirm(item)"></u-cell-item>
   </u-cell-group>
+
+
+
+
+  <!-- </view> -->
 </template>
 
 <script setup>
@@ -11,70 +17,59 @@
     onLoad,
     onPageScroll
   } from '@dcloudio/uni-app';
+
+
   import {
     computed,
     getCurrentInstance,
     ref
   } from 'vue'
   import {
+    CAR_BRANDS
+  } from '@/utils/constant.js'
+  import {
     groupBy
   } from 'lodash'
 
-  // 定义响应式数据
-  const scrollTop = ref(0)
-  // const indexList = ref([
-  //   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-  //   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-  // ])
 
-  // 页面滚动事件处理
-  onPageScroll((e) => {
-    scrollTop.value = e.scrollTop
-  })
-
-  const to_back = (city) => {
-    console.log('city', city)
-    uni.navigateTo({
-      url: `/pages/publish/quyu3`,
-      events: {
-        from_child: (data) => {
-          uni.navigateBack({
-            delta: 1,
-            success(res) {
-              eventChannel.emit('from_child', {
-                city,
-                region: data
-              });
-            }
-          })
-
-        }
-      },
-      success: (res) => {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', city)
+  const confirm = (item) => {
+    uni.navigateBack({
+      delta: 1,
+      success(res) {
+        // 4. 主动向 PageA 发送回复 (可选)
+        eventChannel.emit('from_child', item);
       }
     })
   }
 
-
-
-
   let eventChannel = null
 
-
-  const citys = ref([])
-
+  const options = ref([])
+  const title = ref('')
 
   onLoad(() => {
     const instance = getCurrentInstance()
     eventChannel = instance.proxy.getOpenerEventChannel()
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     eventChannel.on('acceptDataFromOpenerPage', function(data) {
-      console.log(data,111111111111111)
-      citys.value = data
+      console.log(data)
+      title.value = data.name
+      getDistrict(data.id)
     })
   })
+
+  const getDistrict = async (id) => {
+    if (!id) return
+    const {
+      data,
+      code
+    } = await REQUEST.get({
+      url: `/app-api/ylc/car/getDistrict?cityId=${id}`,
+    })
+
+
+    options.value = data
+  }
 </script>
 
 <style lang="scss" scoped>

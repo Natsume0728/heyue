@@ -65,6 +65,7 @@
     console.log(nickname.value)
     wx.setStorageSync('nickname', data.nickname)
     wx.setStorageSync('mobile', data.mobile)
+      wx.setStorageSync('expireTime', data.expireTime)
   }
 
   const updateUserInfo = async () => {

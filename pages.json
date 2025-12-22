@@ -137,6 +137,14 @@
     },
 
     {
+      "path": "pages/publish/quyu3",
+      "style": {
+        "navigationBarTitleText": "区域"
+      }
+    },
+
+
+    {
       "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登录"

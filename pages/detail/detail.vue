@@ -93,7 +93,7 @@
         </uni-grid-item>
 
 
-<!--        <uni-grid-item>
+        <!--        <uni-grid-item>
           <view class="item">
             <view>{{carInfo.transferTimes}}</view>
             <view class="info">过户次数</view>
@@ -133,6 +133,14 @@
       <image v-for="pic in carInfo.carPics" :key="pic" :src="pic" mode="aspectFit"></image>
     </view>
 
+    <view class="card" v-if="carRecommendList && carRecommendList.length">
+      <view class="t-1"> 车源推荐</view>
+      <!-- <image v-for="pic in carInfo.carPics" :key="pic" :src="pic" mode="aspectFit"></image> -->
+      <Card v-for="item in carRecommendList" :key="item.carId" :carInfo="item"> </Card>
+
+    </view>
+
+
     <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 100 }" :draggable="true" v-if="!carInfo.isCollect">
       <template #trigger>
         <view class="btn-coll" @click="collCar" style=" background-color: #ffde03;
@@ -145,6 +153,37 @@
         </view>
       </template>
     </u-fab>
+
+    <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 200 }" :draggable="true" v-if="!carInfo.isCollect">
+      <template #trigger>
+        <!--        <view class="btn-coll" @click="collCar" style=" background-color: #ffde03;
+         border-radius: 50%;
+         width: 100rpx;
+         height: 100rpx;    
+         text-align: center;  font-weight: 600;
+         line-height: 100rpx;">
+          分享
+        </view> -->
+
+        <button open-type="share" style="border: none;background-color: #ffde03;border-radius: 50%;"
+          class="share-btn">分享</button>
+
+      </template>
+    </u-fab>
+
+    <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 300 }" :draggable="true" v-if="!carInfo.isCollect">
+      <template #trigger>
+        <view class="btn-coll" @click="makePhoneCall" style=" background-color: #ffde03;
+         border-radius: 50%;
+         width: 100rpx;
+         height: 100rpx;    
+         text-align: center;  font-weight: 600;
+         line-height: 100rpx;">
+          电话
+        </view>
+      </template>
+    </u-fab>
+
 
 
     <u-fab :gap="{ left: 16, right: 16, top: 16, bottom: 100 }" :draggable="true" position="left-bottom"
@@ -175,6 +214,8 @@
 </template>
 
 <script setup>
+  import Card from '@/components/Card.vue'
+
   import REQUEST from '@/request/index.js'
   import dayjs from 'dayjs'
   import {
@@ -189,6 +230,11 @@
     onShow
   } from '@dcloudio/uni-app'
 
+  const makePhoneCall = () => {
+    wx.makePhoneCall({
+      phoneNumber: carInfo.mobile || '13517261384' //仅为示例，并非真实的电话号码
+    })
+  }
 
   const onTrigger = () => {
 
@@ -222,6 +268,7 @@
     } else {
       memberStatus.value = _memberStatus
       get_detail()
+      getcarRecommend()
     }
 
 
@@ -229,6 +276,30 @@
 
   const timeFormate = (v) => {
     return dayjs(v).format('YYYY/MM/DD')
+  }
+
+  const carRecommendList = ref([])
+  const getcarRecommend = async () => {
+    try {
+      const {
+        data,
+        code,
+        msg
+      } = await REQUEST.get({
+        url: `/app-api/ylc/car/carRecommend`,
+        data: {
+          carId: carId.value,
+        },
+      })
+      if (code == 0) {
+        carRecommendList.value = data
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      carRecommendList.value = {}
+
+    }
   }
 
   const get_detail = async () => {
@@ -395,6 +466,22 @@
         color: $uni-info;
         font-weight: 400;
       }
+    }
+  }
+
+  .share-btn {
+    background-color: #ffde03;
+    border-radius: 50%;
+    width: 100rpx;
+    height: 100rpx;
+    text-align: center;
+    font-weight: 600;
+    line-height: 100rpx;
+    padding: 0;
+    font-size: inherit;
+
+    &::after {
+      border: none;
     }
   }
 
