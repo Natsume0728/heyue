@@ -99,8 +99,9 @@
     } = await REQUEST.get({
       url: `/app-api/ylc/car/getCarBrandSearch`,
     })
+    const {allBrand, hotBrand} = data
     // const obj = groupBy(CAR_BRANDS, 'firstletter')
-    const obj = groupBy(data, 'firstletter')
+    const obj = groupBy(allBrand, 'firstletter')
     const _list = []
     for (let key in obj) {
       if (obj.hasOwnProperty(key)) {
