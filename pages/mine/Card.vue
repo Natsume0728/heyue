@@ -37,7 +37,7 @@ allSalePrice -->
     props: {
       saleStatus: {
         type: Number,
-        default: 0
+        default: 3
       },
       carInfo: {
         type: Object,
